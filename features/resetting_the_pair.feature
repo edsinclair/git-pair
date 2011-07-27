@@ -1,3 +1,7 @@
+Feature: Resetting the pair
+  In order reset to the global author
+  A user should be able to
+  reset to the Global User
 
   Scenario: resetting the current authors
     Given I have added the author "Linus Torvalds <linus@example.org>"
