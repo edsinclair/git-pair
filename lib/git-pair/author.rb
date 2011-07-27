@@ -4,7 +4,7 @@ module GitPair
     ValidAuthorStringRegex = /^\s*([^<]+)<([^>]+)>\s*$/
 
     class InvalidAuthorString < TypeError; end
-    
+
     def self.all
       Config.all_author_strings.map { |string| new(string) }
     end
@@ -15,7 +15,7 @@ module GitPair
     end
 
     def self.find(abbr)
-      all.find { |author| author.match?(abbr) } || 
+      all.find { |author| author.match?(abbr) } ||
         raise(NoMatchingAuthorsError, "no authors matched #{abbr}")
     end
 
@@ -23,9 +23,20 @@ module GitPair
       if authors.length == 1
         authors.first.email
       else
-        initials_string = '+' + authors.map { |a| a.initials }.join('+')
-        Config.default_email.sub("@", "#{initials_string}@")
+        author_names    = authors.map { |a| a.initials }
+        initials_string = author_names.unshift(authors_prefix).join('+')
+        "#{initials_string}@#{authors_email(authors)}"
       end
+    end
+
+    def self.authors_email(authors)
+      return Config.domain unless Config.domain.empty?
+      return authors.first.email.split("@").last
+    end
+
+    def self.authors_prefix
+      return Config.prefix unless Config.prefix.empty?
+      return "pair"
     end
 
     def self.exists?(author)

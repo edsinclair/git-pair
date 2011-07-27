@@ -40,7 +40,7 @@ World(RepositoryHelper)
 
 Before do
   backup_gitconfigs
-  FileUtils.mkdir_p RepositoryHelper::TEST_REPO_PATH
+  FileUtils.mkdir_p RepositoryHelper::TEST_REPO_DOT_GIT_PATH
   `GIT_DIR=#{RepositoryHelper::TEST_REPO_DOT_GIT_PATH} && git init`
 end
 

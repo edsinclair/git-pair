@@ -13,14 +13,22 @@ module GitPair
 
         opts.separator ' '
         opts.separator highlight('Options:')
-        opts.on '-a', '--add AUTHOR',    'Add an author. Format: "Author Name <author@example.com>"' do |author| 
+        opts.on '-a', '--add AUTHOR',    'Add an author. Format: "Author Name <author@example.com>"' do |author|
           Config.add_author Author.new(author)
         end
-        opts.on '-r', '--remove NAME', 'Remove an author. Use the full name.' do |name| 
+        opts.on '-r', '--remove NAME', 'Remove an author. Use the full name.' do |name|
           Config.remove_author name
         end
         opts.on '-d', '--reset', 'Reset current author to default (global) config' do
           Config.reset
+        end
+        opts.on '--domain DOMAIN', 'Add a default email domain to be used for pairs' do |domain|
+          puts "Setting domain to #{domain}"
+          Config.set_domain domain
+        end
+        opts.on '--prefix PREFIX', 'Add a default email prefix to be used for pairs' do |prefix|
+          puts "Setting prefix to #{prefix}"
+          Config.set_prefix prefix
         end
 
         opts.separator ' '
@@ -31,6 +39,9 @@ module GitPair
         opts.separator ' '
         opts.separator highlight('Current config:')
         opts.separator author_list.split("\n")
+        opts.separator ' '
+        opts.separator domain.split("\n")
+        opts.separator prefix.split("\n")
         opts.separator ' '
         opts.separator current_author_info.split("\n")
       end
@@ -62,6 +73,14 @@ module GitPair
 
     def author_list
       "     #{bold 'Author list:'} #{Author.all.sort.map { |a| a.name }.join "\n                  "}"
+    end
+
+    def domain
+      "          #{bold 'Domain:'} #{Config.domain} \n"
+    end
+
+    def prefix
+      "          #{bold 'Prefix:'} #{Config.prefix} \n"
     end
 
     def current_author_info

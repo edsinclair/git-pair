@@ -10,6 +10,24 @@ Given /^my global Git configuration is setup with email "([^\"]*)"$/ do |email|
   git_config "--global user.email \"#{email}\""
 end
 
+When /^I (?:have )?set the domain to "([^"]*)"$/ do |domain|
+  git_pair %(--domain "#{domain}")
+end
+
+Then /^`git pair` should display "([^"]*)" as its domain$/ do |domain|
+  output = git_pair
+  assert_equal domain, current_domain_from_output(output)
+end
+
+When /^I (?:have )?set the prefix to "([^"]*)"$/ do |prefix|
+  git_pair %(--prefix "#{prefix}")
+end
+
+Then /^`git pair` should display "([^"]*)" as its prefix$/ do |prefix|
+  output = git_pair
+  assert_equal prefix, current_prefix_from_output(output)
+end
+
 When /^I add the author "([^\"]*)"$/ do |name_and_email|
   git_pair %(--add "#{name_and_email}")
 end
@@ -22,7 +40,7 @@ When /^I (?:try to )?switch to the pair "([^\"]*)"$/ do |abbreviations|
   @output = git_pair abbreviations
 end
 
-When /^I reset the current authors$/ do 
+When /^I reset the current authors$/ do
   git_pair '--reset'
 end
 
@@ -86,6 +104,15 @@ Then /^the config file should have no authors$/ do
   git_config(%(--global --get-all git-pair.authors)).should == ''
 end
 
+def current_prefix_from_output(output)
+  output =~ /Prefix: (.*?)\n/im
+  $1.strip
+end
+
+def current_domain_from_output(output)
+  output =~ /Domain: (.*?)\n/im
+  $1.strip
+end
 
 def authors_list_from_output(output)
   output =~ /Author list: (.*?)\n\s?\n/im
