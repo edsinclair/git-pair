@@ -22,13 +22,9 @@ module GitPair
         opts.on '-d', '--reset', 'Reset current author to default (global) config' do
           Config.reset
         end
-        opts.on '--domain DOMAIN', 'Add a default email domain to be used for pairs' do |domain|
-          puts "Setting domain to #{domain}"
-          Config.set_domain domain
-        end
-        opts.on '--prefix PREFIX', 'Add a default email prefix to be used for pairs' do |prefix|
-          puts "Setting prefix to #{prefix}"
-          Config.set_prefix prefix
+        opts.on '--email EMAIL', 'Add a default email address to be used for pairs' do |email|
+          puts "Setting email to #{email}"
+          Config.set_pair_email email
         end
 
         opts.separator ' '
@@ -40,8 +36,7 @@ module GitPair
         opts.separator highlight('Current config:')
         opts.separator author_list.split("\n")
         opts.separator ' '
-        opts.separator domain.split("\n")
-        opts.separator prefix.split("\n")
+        opts.separator pair_email.split("\n")
         opts.separator ' '
         opts.separator current_author_info.split("\n")
       end
@@ -75,12 +70,8 @@ module GitPair
       "     #{bold 'Author list:'} #{Author.all.sort.map { |a| a.name }.join "\n                  "}"
     end
 
-    def domain
-      "          #{bold 'Domain:'} #{Config.domain} \n"
-    end
-
-    def prefix
-      "          #{bold 'Prefix:'} #{Config.prefix} \n"
+    def pair_email
+      "          #{bold 'Pair email:'} #{Config.pair_email} \n"
     end
 
     def current_author_info

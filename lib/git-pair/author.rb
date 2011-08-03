@@ -24,19 +24,21 @@ module GitPair
         authors.first.email
       else
         author_names    = authors.map { |a| a.initials }
-        initials_string = author_names.unshift(authors_prefix).join('+')
+        if self.authors_prefix
+          author_names.unshift(authors_prefix)
+        end
+        initials_string = author_names.join('+')
         "#{initials_string}@#{authors_email(authors)}"
       end
     end
 
-    def self.authors_email(authors)
-      return Config.domain unless Config.domain.empty?
-      return authors.first.email.split("@").last
+    def self.authors_prefix
+      return Config.pair_email.split("@").first unless Config.pair_email.empty?
     end
 
-    def self.authors_prefix
-      return Config.prefix unless Config.prefix.empty?
-      return "pair"
+    def self.authors_email(authors)
+      return Config.pair_email.split("@").last unless Config.pair_email.empty?
+      return authors.first.email.split("@").last
     end
 
     def self.exists?(author)

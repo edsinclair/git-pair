@@ -43,20 +43,12 @@ module GitPair
       `git config --get user.email`.strip
     end
 
-    def domain
-      `git config --global --get git-pair.domain`.strip
+    def pair_email
+      `git config --global --get git-pair.email`.strip
     end
 
-    def prefix
-      `git config --global --get git-pair.prefix`.strip
-    end
-
-    def set_domain(domain)
-      `git config --global git-pair.domain "#{domain}"`
-    end
-
-    def set_prefix(prefix)
-      `git config --global git-pair.prefix "#{prefix}"`
+    def set_pair_email(email)
+      `git config --global git-pair.email "#{email}"`
     end
   end
 end

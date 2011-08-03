@@ -10,22 +10,13 @@ Given /^my global Git configuration is setup with email "([^\"]*)"$/ do |email|
   git_config "--global user.email \"#{email}\""
 end
 
-When /^I (?:have )?set the domain to "([^"]*)"$/ do |domain|
-  git_pair %(--domain "#{domain}")
+When /^I (?:have )?set the pair email to "([^"]*)"$/ do |email|
+  git_pair %(--email "#{email}")
 end
 
-Then /^`git pair` should display "([^"]*)" as its domain$/ do |domain|
+Then /^`git pair` should display "([^"]*)" as its pair email$/ do |email|
   output = git_pair
-  assert_equal domain, current_domain_from_output(output)
-end
-
-When /^I (?:have )?set the prefix to "([^"]*)"$/ do |prefix|
-  git_pair %(--prefix "#{prefix}")
-end
-
-Then /^`git pair` should display "([^"]*)" as its prefix$/ do |prefix|
-  output = git_pair
-  assert_equal prefix, current_prefix_from_output(output)
+  assert_equal email, current_pair_email_from_output(output)
 end
 
 When /^I add the author "([^\"]*)"$/ do |name_and_email|
@@ -104,13 +95,8 @@ Then /^the config file should have no authors$/ do
   git_config(%(--global --get-all git-pair.authors)).should == ''
 end
 
-def current_prefix_from_output(output)
-  output =~ /Prefix: (.*?)\n/im
-  $1.strip
-end
-
-def current_domain_from_output(output)
-  output =~ /Domain: (.*?)\n/im
+def current_pair_email_from_output(output)
+  output =~ /Pair email: (.*?)\n/im
   $1.strip
 end
 
