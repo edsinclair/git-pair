@@ -27,6 +27,10 @@ When /^I remove the name "([^\"]*)"$/ do |name|
   git_pair %(--remove "#{name}")
 end
 
+When /^I specify the initials "([^"]*)"$/ do |abbreviations|
+  @output = git_pair %(--show "#{abbreviations}")
+end
+
 When /^I (?:try to )?switch to the pair "([^\"]*)"$/ do |abbreviations|
   @output = git_pair abbreviations
 end

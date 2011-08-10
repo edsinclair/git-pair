@@ -23,7 +23,7 @@ module GitPair
       if authors.length == 1
         authors.first.email
       else
-        author_names    = authors.map { |a| a.initials }
+        author_names = authors.map { |a| a.initials }
         if self.authors_prefix
           author_names.unshift(authors_prefix)
         end

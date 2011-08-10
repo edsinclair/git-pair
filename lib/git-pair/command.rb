@@ -1,4 +1,5 @@
 require 'optparse'
+require 'ostruct'
 
 module GitPair
   module Command
@@ -7,24 +8,40 @@ module GitPair
     C_BOLD, C_REVERSE, C_RED, C_RESET = "\e[1m", "\e[7m", "\e[91m", "\e[0m"
 
     def run!(args)
+      options = OpenStruct.new(:update  => true,
+                               :authors => [])
+
       parser = OptionParser.new do |opts|
         opts.banner = highlight('General Syntax:')
         opts.separator '  git pair [reset | authors | options]'
 
         opts.separator ' '
         opts.separator highlight('Options:')
+
         opts.on '-a', '--add AUTHOR',    'Add an author. Format: "Author Name <author@example.com>"' do |author|
-          Config.add_author Author.new(author)
+          options.add_author = Author.new(author)
+          Config.add_author(options.add_author)
         end
+
         opts.on '-r', '--remove NAME', 'Remove an author. Use the full name.' do |name|
-          Config.remove_author name
+          options.remove_author= name
+          Config.remove_author options.remove_author
         end
+
         opts.on '-d', '--reset', 'Reset current author to default (global) config' do
+          options.reset = true
           Config.reset
         end
+
         opts.on '--email EMAIL', 'Add a default email address to be used for pairs' do |email|
           puts "Setting email to #{email}"
-          Config.set_pair_email email
+          options.pair_email = email
+          Config.set_pair_email(options.pair_email)
+        end
+
+        opts.on '-s', "--show 'aa [bb]'", 'Show the string to be used for the commit author field' do |initials|
+          options.update = false
+          options.authors = Author.find_all(initials.split(' '))
         end
 
         opts.separator ' '
@@ -41,16 +58,24 @@ module GitPair
         opts.separator current_author_info.split("\n")
       end
 
-      authors = parser.parse!(args.dup)
+      initials = parser.parse!(args.dup)
+
+      initials = initials.map { |e| e.split(' ') }.flatten # in case initials are enclosed in quotes
+
+      if options.authors.empty? && !initials.empty?
+        options.authors = Author.find_all(initials)
+      end
 
       if args.empty?
         puts parser.help
-      elsif authors.empty?
+      elsif options.authors && !options.update
+        puts Display.git_author options.authors
+      elsif options.authors.empty?
         puts author_list
         puts
         puts current_author_info
       else
-        Config.switch Author.find_all(authors)
+        Config.switch(options.authors)
         puts current_author_info
       end
 
@@ -71,7 +96,7 @@ module GitPair
     end
 
     def pair_email
-      "          #{bold 'Pair email:'} #{Config.pair_email} \n"
+      "      #{bold 'Pair email:'} #{Config.pair_email} \n"
     end
 
     def current_author_info
