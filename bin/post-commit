@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+#
+# To enable this hook, add a symlink to project/.git/hooks/post-commit that points to this file
+
+last_commit = `git log -1 HEAD`
+
+extract_author   = Regexp.new(/^Author: (.+)/)
+extract_pair     = Regexp.new(/\(([^)]*)\)$/)
+extract_sha      = Regexp.new(/^commit (\w+)/)
+extract_initials = Regexp.new(/\/|\s|,/)
+
+if last_commit.match(extract_author)
+  author = $1
+end
+
+if last_commit.match(extract_sha)
+  sha = $1
+end
+
+if last_commit.match(extract_pair)
+  initials = $1.split(extract_initials)
+
+  git_pair_author = %x[git pair -s "#{initials.join(' ')}"].chomp
+
+  command = %Q(git commit --amend --author="#{git_pair_author}" --reuse-message=#{sha})
+  if author != git_pair_author
+    puts "Attempting to amend commit: #{sha}"
+    puts "Updating author from: #{author}"
+    puts "To: #{git_pair_author}"
+    system(command)
+    new_sha = `git rev-parse HEAD`.chomp
+    puts "Succeeded! New SHA is: #{new_sha}"
+  end
+end
