@@ -1,34 +1,32 @@
 #!/usr/bin/env ruby
 #
+# This post-commit hook looks for one or more initials inside parentheses at the end of
+# the commit message and uses them to amend the commit author field using the git pair authors
+# matching those initials.
+#
 # To enable this hook, add a symlink to project/.git/hooks/post-commit that points to this file
 
-last_commit = `git log -1 HEAD`
+revision, author, body = %x[git log HEAD -1 --format="%H<separator>%an <%ae><separator>%B"].split("<separator>")
 
-extract_author   = Regexp.new(/^Author: (.+)/)
-extract_pair     = Regexp.new(/\(([^)]*)\)$/)
-extract_sha      = Regexp.new(/^commit (\w+)/)
-extract_initials = Regexp.new(/\/|\s|,/)
+pair_regex     = Regexp.new(/^([^(]*) \(([^)]*)\)$/)
+initials_regex = Regexp.new(/\/|\s|,/)
 
-if last_commit.match(extract_author)
-  author = $1
-end
+if body.match(pair_regex)
+  message  = $1.chomp # raw commit message without initials
+  initials = $2.split(initials_regex)
 
-if last_commit.match(extract_sha)
-  sha = $1
-end
+  git_pair_author  = %x[git pair -s "#{initials.join(' ')}"].chomp
+  git_amend_author = %Q(git commit --amend --author="#{git_pair_author}" --message="#{message}")
 
-if last_commit.match(extract_pair)
-  initials = $1.split(extract_initials)
-
-  git_pair_author = %x[git pair -s "#{initials.join(' ')}"].chomp
-
-  command = %Q(git commit --amend --author="#{git_pair_author}" --reuse-message=#{sha})
-  if author != git_pair_author
-    puts "Attempting to amend commit: #{sha}"
-    puts "Updating author from: #{author}"
+  if git_pair_author.empty?
+    puts "One or more of the initials: (#{initials.join(',')}) didn't match any of the git pair authors."
+    puts "You can use the following command to manually amend the HEAD commit:\n\n"
+    puts %Q(  git commit --amend --author="First Last & First Last <pair+fl+fl@example.com>"\n\n)
+  elsif git_pair_author != author
+    puts "Amending revision: #{revision} author from: #{author}"
     puts "To: #{git_pair_author}"
-    system(command)
-    new_sha = `git rev-parse HEAD`.chomp
+    system(git_amend_author)
+    new_sha = %x[git rev-parse HEAD].chomp
     puts "Succeeded! New SHA is: #{new_sha}"
   end
 end
