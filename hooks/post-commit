@@ -8,11 +8,11 @@
 
 revision, author, body = %x[git log HEAD -1 --format="%H<separator>%an <%ae><separator>%B"].split("<separator>")
 
-pair_regex     = Regexp.new(/^([^(]*) \(([^)]*)\)$/)
+pair_regex     = Regexp.new(/^([^(]*)\(([^)]*)\)$/)
 initials_regex = Regexp.new(/\/|\s|,/)
 
 if body.match(pair_regex)
-  message  = $1.chomp # raw commit message without initials
+  message  = $1.strip # raw commit message without initials
   initials = $2.split(initials_regex)
 
   git_pair_author  = %x[git pair -s "#{initials.join(' ')}"].chomp
