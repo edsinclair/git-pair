@@ -10,8 +10,8 @@ begin
                       "git-config's user.name and user.email settings so you " +
                       "can commit as more than one author."
     gem.email = "adam@edgecase.com"
-    gem.homepage = "http://github.com/edgecase/git-pair"
-    gem.authors = ["Chris Kampmeier", "Adam McCrea", "Jon Distad"]
+    gem.homepage = "http://github.com/edsinclair/git-pair"
+    gem.authors = ["Chris Kampmeier", "Adam McCrea", "Jon Distad", "Tim Gildea", "Eirik Dentz Sinclair"]
     gem.add_development_dependency "cucumber", ">= 0"
   end
   Jeweler::GemcutterTasks.new
