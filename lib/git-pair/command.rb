@@ -1,5 +1,6 @@
 require 'optparse'
 require 'ostruct'
+require 'pathname'
 
 module GitPair
   module Command
@@ -31,6 +32,10 @@ module GitPair
         opts.on '-d', '--reset', 'Reset current author to default (global) config' do
           options.reset = true
           Config.reset
+        end
+
+        opts.on '--install-hook', 'Install a post-commit hook for the current repo. See git-pair/hooks/post-commit for more information.' do
+          options.symlink = true
         end
 
         opts.on '--email EMAIL', 'Add a default email address to be used for pairs' do |email|
@@ -70,6 +75,8 @@ module GitPair
         puts parser.help
       elsif options.authors && !options.update
         puts Display.git_author options.authors
+      elsif options.symlink
+        symlink_post_commit_hook
       elsif options.authors.empty?
         puts author_list
         puts
@@ -120,6 +127,26 @@ module GitPair
       "#{C_RED}#{C_REVERSE}#{string}#{C_RESET}"
     end
 
+    def symlink_post_commit_hook
+      this_directory    = Pathname.new File.expand_path(File.dirname(__FILE__))
+      post_commit_hook  = Pathname.new(File.join(this_directory, "..", "..", "hooks", "post-commit")).realpath
+      project_git_hooks = File.join(Dir.pwd, ".git", "hooks")
+
+      if File.exists?(post_commit_hook) && File.exists?(project_git_hooks)
+        symlink_target = Pathname.new(File.join(project_git_hooks, "post-commit"))
+
+        puts "Symlinking: #{symlink_target}\nto #{post_commit_hook}.\n\n"
+
+        if File.exists?(symlink_target)
+          puts "Can't create symlink! #{symlink_target} already exists."
+        else
+          symlink_target.make_symlink(post_commit_hook)
+          puts "Succceded!"
+        end
+      elsif !File.exists?(project_git_hooks)
+        puts "The current directory doesn't appear to be a valid git repository."
+      end
+    end
   end
 end
 
