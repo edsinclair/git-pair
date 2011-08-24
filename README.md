@@ -7,7 +7,7 @@ more than one author.
 
 Install the gem:
 
-    gem install edgecase-git-pair
+    gem install edsinclair-git-pair
 
 And here's how to use it!
 
