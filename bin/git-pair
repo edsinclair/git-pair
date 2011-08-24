@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../lib"))
-
 require 'git-pair'
+require 'git-pair/command'
 
 GitPair::Command.run!(ARGV)
-
