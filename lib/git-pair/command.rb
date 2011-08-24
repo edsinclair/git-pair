@@ -25,7 +25,7 @@ module GitPair
         end
 
         opts.on '-r', '--remove NAME', 'Remove an author. Use the full name.' do |name|
-          options.remove_author= name
+          options.remove_author = name
           Config.remove_author options.remove_author
         end
 

@@ -1,5 +1,5 @@
 Feature: seeing authors on console
-  In order to see current author
+  In order to see the current author
   A user should be able to
   get the author string for a set of initials
 

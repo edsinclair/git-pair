@@ -96,7 +96,7 @@ Then /^the last command's output should include "([^\"]*)"$/ do |output|
 end
 
 Then /^the config file should have no authors$/ do
-  git_config(%(--global --get-all git-pair.authors)).should == ''
+  assert git_config(%(--global --get-all git-pair.authors)).empty?
 end
 
 def current_pair_email_from_output(output)
