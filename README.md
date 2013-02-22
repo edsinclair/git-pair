@@ -1,6 +1,6 @@
 # git-pair
 
-<img src="https://travis-ci.org/edsinclair/git-pair.png?branch=master" height="143" alt="Retina-ready Shields example" />
+<img src="https://travis-ci.org/edsinclair/git-pair.png?branch=master" height="14" alt="Retina-ready Shields example" />
 
 A git porcelain for changing `user.name` and `user.email` so you can commit as
 more than one author.
