@@ -1,5 +1,0 @@
-Autotest.add_hook :initialize do |autotest|
-  [/\.git/, /pkg\//, /\.gemspec$/, /\.log$/].each do |regexp|
-    autotest.add_exception regexp
-  end
-end

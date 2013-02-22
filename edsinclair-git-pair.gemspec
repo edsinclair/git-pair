@@ -6,9 +6,9 @@ Gem::Specification.new do |s|
   s.name        = "edsinclair-git-pair"
   s.version     = GitPair::VERSION
   s.authors     = ["Chris Kampmeier", "Adam McCrea", "Jon Distad", "Eirik Dentz Sinclair", "Tim Gildea"]
-  s.email       = ["eirik@efficiency20.com"]
+  s.email       = ["eirikdentz@gmail.com"]
   s.homepage    = ""
-  s.date        = %q{2011-08-24}
+  s.date        = %q{2013-02-22}
   s.summary     = %q{Configure git to commit as more than one author}
   s.description = %q{A git porcelain for pair programming. Changes git-config's user.name and user.email settings so you can commit as more than one author.}
 
@@ -19,5 +19,6 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
   s.add_development_dependency "cucumber"
-  s.add_development_dependency "ruby-debug"
+  s.add_development_dependency "debugger"
+  s.add_development_dependency "rake"
 end

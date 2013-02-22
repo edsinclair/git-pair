@@ -1,5 +1,5 @@
 Given /^I have added the author "([^\"]*)"$/ do |name_and_email|
-  When %(I add the author "#{name_and_email}")
+  step %(I add the author "#{name_and_email}")
 end
 
 Given /^my global Git configuration is setup with user "([^\"]*)"$/ do |name|
