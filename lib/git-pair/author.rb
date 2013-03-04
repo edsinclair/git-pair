@@ -19,26 +19,23 @@ module GitPair
         raise(NoMatchingAuthorsError, "no authors matched #{abbr}")
     end
 
-    def self.email(authors)
-      if authors.length == 1
-        authors.first.email
+    def self.email_address_for(authors)
+      "#{local_part_for(authors)}@#{domain_for(authors.first.email)}"
+    end
+
+    def self.local_part_for(authors)
+      return authors.first.email.local_part if authors.size == 1
+
+      if pair_email.local_part && pair_email.local_part != ""
+        authors.map(&:initials).unshift(pair_email.local_part).join("+")
       else
-        author_names = authors.map { |a| a.initials }
-        if self.authors_prefix
-          author_names.unshift(authors_prefix)
-        end
-        initials_string = author_names.join('+')
-        "#{initials_string}@#{authors_email(authors)}"
+        authors.map { |author| author.email.local_part }.join("+")
       end
     end
 
-    def self.authors_prefix
-      return Config.pair_email.split("@").first unless Config.pair_email.empty?
-    end
-
-    def self.authors_email(authors)
-      return Config.pair_email.split("@").last unless Config.pair_email.empty?
-      return authors.first.email.split("@").last
+    def self.domain_for(email_address)
+      return pair_email.domain if pair_email.domain
+      return email_address.domain
     end
 
     def self.exists?(author)
@@ -49,6 +46,10 @@ module GitPair
       author_string =~ ValidAuthorStringRegex
     end
 
+    def self.pair_email
+      EmailAddress.new(Config.pair_email)
+    end
+
     attr_reader :name, :email
 
     def initialize(string)
@@ -57,8 +58,8 @@ module GitPair
       end
 
       string =~ ValidAuthorStringRegex
-      @name = $1.to_s.strip
-      @email = $2.to_s.strip
+      self.name = $1.to_s.strip
+      self.email = EmailAddress.new($2.to_s.strip)
     end
 
     def <=>(other)
@@ -72,6 +73,10 @@ module GitPair
     def match?(abbr)
       abbr.downcase == initials
     end
+
+  private
+
+    attr_writer :name, :email
 
   end
 end

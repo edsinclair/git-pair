@@ -23,7 +23,7 @@ module GitPair
 
     def switch(authors)
       `git config user.name "#{authors.map { |a| a.name }.join(' & ')}"`
-      `git config user.email "#{Author.email(authors)}"`
+      `git config user.email "#{Author.email_address_for(authors)}"`
     end
 
     def reset

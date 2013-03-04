@@ -19,22 +19,14 @@ Feature: Switching authors
     And my global Git configuration is setup with email "devs@example.com"
     When I switch to the pair "LT JCH"
     Then `git pair` should display "Linus Torvalds & Junio C Hamano" for the current author
-    And `git pair` should display "lt+jch@example.net" for the current email
-
-  Scenario: Pairing with two authors the pair email domain is set to the first author
-    Given I have added the author "Linus Torvalds <linus@example.net>"
-    And I have added the author "Junio C Hamano <junio@example.org>"
-    And my global Git configuration is setup with email "devs@example.com"
-    When I switch to the pair "JCH LT"
-    Then `git pair` should display "Junio C Hamano & Linus Torvalds" for the current author
-    And `git pair` should display "jch+lt@example.org" for the current email
+    And `git pair` should display "linus+junio@example.net" for the current email
 
   Scenario: Pairing with a single author and the pair email has been set
     Given I have set the pair email to "devs@widgets.com"
     And I have added the author "Linus Torvalds <linus@example.net>"
     When I switch to the pair "LT"
     Then `git pair` should display "Linus Torvalds" for the current author
-    And `git pair` should display "linus@example.net" for the current email
+    And `git pair` should display "linus@widgets.com" for the current email
 
   Scenario: Pairing with two authors and the pair email has been set
     Given I have set the pair email to "devs@widgets.com"

@@ -3,7 +3,7 @@ module GitPair
     extend self
 
     def git_author(authors)
-      "#{authors.map { |a| a.name }.join(' & ')} <#{Author.email(authors)}>"
+      "#{authors.map { |a| a.name }.join(' & ')} <#{Author.email_address_for(authors)}>"
     end
   end
 end

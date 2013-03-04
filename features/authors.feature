@@ -17,13 +17,13 @@ Feature: seeing authors on console
     And I have added the author "Junio C Hamano <junio@example.org>"
     And my global Git configuration is setup with email "devs@example.com"
     When I specify the initials "LT JCH"
-    Then the last command's output should include "Linus Torvalds & Junio C Hamano <lt+jch@example.net>"
+    Then the last command's output should include "Linus Torvalds & Junio C Hamano <linus+junio@example.net>"
 
   Scenario: A single author and the pair email has been set
     Given I have set the pair email to "devs@widgets.com"
     And I have added the author "Linus Torvalds <linus@example.net>"
     When I specify the initials "LT"
-    Then the last command's output should include "Linus Torvalds <linus@example.net>"
+    Then the last command's output should include "Linus Torvalds <linus@widgets.com>"
 
   Scenario: Pairing with two authors and the pair email has been set
     Given I have set the pair email to "devs@widgets.com"
