@@ -1,3 +1,1 @@
 default: --format progress --color features
-autotest: --format pretty
-autotest-all: --profile default

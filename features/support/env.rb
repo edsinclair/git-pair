@@ -24,19 +24,34 @@ module RepositoryHelper
 
   def backup_gitconfigs
     FileUtils.mkdir_p CONFIG_BACKUP_PATH
-    FileUtils.cp File.expand_path("~/.gitconfig"), "#{CONFIG_BACKUP_PATH}/.gitconfig.backup"
+    backup_user_gitconfig
     FileUtils.cp "#{PROJECT_PATH}/.git/config", "#{CONFIG_BACKUP_PATH}/config.backup"
   end
 
   def restore_gitconfigs
-    FileUtils.cp "#{CONFIG_BACKUP_PATH}/config.backup",     "#{PROJECT_PATH}/.git/config"
-    FileUtils.cp "#{CONFIG_BACKUP_PATH}/.gitconfig.backup", File.expand_path("~/.gitconfig")
+    FileUtils.cp "#{CONFIG_BACKUP_PATH}/config.backup", "#{PROJECT_PATH}/.git/config"
+    restore_user_gitconfig
     FileUtils.rm_rf CONFIG_BACKUP_PATH
+  end
+
+  def backup_user_gitconfig
+    FileUtils.cp(gitconfig_path, gitconfig_backup_path) if File.exists?(gitconfig_path)
+  end
+
+  def restore_user_gitconfig
+    FileUtils.cp(gitconfig_backup_path, gitconfig_path) if File.exists?(gitconfig_backup_path)
+  end
+
+  def gitconfig_backup_path
+    @gitconfig_backup_path ||= File.join(CONFIG_BACKUP_PATH, ".gitconfig.backup")
+  end
+
+  def gitconfig_path
+    @gitconfig_path ||= File.expand_path(File.join("~", ".gitconfig"))
   end
 end
 
 World(RepositoryHelper)
-
 
 Before do
   backup_gitconfigs
