@@ -11,7 +11,7 @@ Install the gem:
 
     gem install edsinclair-git-pair
 
-And here's how to use it!
+Usage:
 
     $ git pair
 
@@ -31,20 +31,37 @@ And here's how to use it!
                                          author's name. You can specify one or more authors.
 
     Current config:
-         Author list: Adam McCrea
-                      Jon Distad
+         Author list: Adam McCrea <amccrea@example.org>
+                      Jon Distad <jdistad@example.net>
+
+         Pair email: devs@edgecase.com
 
       Current author: Jon Distad + Adam McCrea
-       Current email: devs+jd+am@edgecase.com
+       Current email: devs+jd+am@example.com
 
 ## How does it work?
 
 The list of authors is maintained in the global git configuration file.
 The current author is set in the git configuration local to the project.
 The email address for a pair will be generated using the first author's email
-domain and the initials separated by a '+' will precede the '@'.
-Alternatively you can specify an email address to be used for pair commits.
-For example: if you specify pair@example.net the pair email address will be pair+aa+bb@example.net
+domain part and the address local parts separated by a '+' will precede the '@'.
+
+You can specify a 'pair' email address to be used in which case the local part
+will be followed by each author's initials separated by a '+' will be used to
+form the local part of the pair email address. Alternatively if you leave off
+the local part and specify the pair email address as '@domain.tld' the
+local part for the pair email will be composed of the local part for each 
+author's email address.
+
+Examples with the git pair email set:
+
+If the git pair email is: devs@example.com Then pair email address will be devs+am+jd@example.com
+If the git pair email is: @example.com Then pair email address will be amccrea+jdistad@example.com
+
+Examples without the git pair email set:
+
+First author is Adam McCrea. Then pair email address will be amccrea+jdistad@example.org
+First author is Jon Disatd. Then pair email address will be jdistad@+amccrea@example.net
 
 ## About this version
 
@@ -56,4 +73,5 @@ and --install-hook options and converts the gem to use Bundler for dependency ma
 
 ## License
 
-Copyright (c) 2009 Chris Kampmeier. See `LICENSE` for details.
+Copyright (c) 2009 Chris Kampmeier.
+Copyright (c) 2013 Eirik Dentz Sinclair. See `LICENSE` for details.
