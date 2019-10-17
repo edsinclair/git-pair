@@ -22,13 +22,14 @@ Usage:
         -a, --add AUTHOR                 Add an author. Format: "Author Name <author@example.com>"
         -r, --remove NAME                Remove an author. Use the full name.
         -d, --reset                      Reset current author to default (global) config
-        -s, --show 'aa [bb]'             Show the string to be used for the commit author field
+        -s, --show '[IDENTIFIER]...'     Show the string to be used for the commit author field
             --install-hook               Install a post-commit hook for the current repo. See git-pair/hooks/post-commit for more information.
             --email EMAIL                Add a default email address to be used for pairs
 
     Switching authors:
-      git pair aa [bb]                   Where AA and BB are any abbreviation of an
-                                         author's name. You can specify one or more authors.
+      git pair [IDENTIFIER]...           Where IDENTIFIER is either the author's initials, first
+                                         name, last name, or email address. You can specify one or
+                                         more authors.
 
     Current config:
          Author list: Adam McCrea <amccrea@example.org>
@@ -69,7 +70,8 @@ This was forked from http://github.com/edgecase/git-pair which in turn was
 forked from http://github.com/chrisk/git-pair.  Many thanks to Chris Kampmeier
 for the original version and Adam McCrea, John Distad and Ehren Murdick for the
 features they added to the edgecase release.  This version adds a --show, --email
-and --install-hook options and converts the gem to use Bundler for dependency management.
+and --install-hook options, adds author selection by name or email address, and
+converts the gem to use Bundler for dependency management.
 
 ## License
 

@@ -71,7 +71,10 @@ module GitPair
     end
 
     def match?(abbr)
-      abbr.downcase == initials
+      abbr = abbr.downcase
+      initials == abbr ||
+        name =~ /\b#{Regexp.escape(abbr)}\b/i ||
+        email.to_s.downcase == abbr
     end
 
   private
