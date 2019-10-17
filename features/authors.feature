@@ -31,3 +31,27 @@ Feature: seeing authors on console
     And I have added the author "Junio C Hamano <junio@example.org>"
     When I specify the initials "LT JCH"
     Then the last command's output should include "Linus Torvalds & Junio C Hamano <devs+lt+jch@widgets.com>"
+
+  Scenario: Selecting authors by first name
+    Given I have added the author "Linus Torvalds <linus@example.net>"
+    And I have added the author "Junio C Hamano <junio@example.org>"
+    When I specify the name "Junio"
+    Then the last command's output should include "Junio C Hamano <junio@example.org>"
+    When I specify the names "Linus Junio"
+    Then the last command's output should include "Linus Torvalds & Junio C Hamano <linus+junio@example.net>"
+
+  Scenario: Selecting authors by last name
+    Given I have added the author "Linus Torvalds <linus@example.net>"
+    And I have added the author "Junio C Hamano <junio@example.org>"
+    When I specify the name "Hamano"
+    Then the last command's output should include "Junio C Hamano <junio@example.org>"
+    When I specify the names "Torvalds Hamano"
+    Then the last command's output should include "Linus Torvalds & Junio C Hamano <linus+junio@example.net>"
+
+  Scenario: Selecting authors by email
+    Given I have added the author "Linus Torvalds <linus@example.net>"
+    And I have added the author "Junio C Hamano <junio@example.org>"
+    When I specify the email "junio@example.org"
+    Then the last command's output should include "Junio C Hamano <junio@example.org>"
+    When I specify the names "linus@example.net junio@example.org"
+    Then the last command's output should include "Linus Torvalds & Junio C Hamano <linus+junio@example.net>"
